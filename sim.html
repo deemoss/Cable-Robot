@@ -8,11 +8,17 @@
 <body>
 
     <h1>This is a heading</h1>
-    <p>This is a paragraph.</p>
+    <p>A paragraph.</p>
     <div>
         <canvas width="600" height="400" id="myCanvas"></canvas>
         <script src="sim.js"></script>
-        <button onclick="start()">Start</button>
+        
+    </div>
+    <div class="absolute">
+        <input type="text" name="name" id="uniqueID" value="500" />
+        <button class="button btn_start" onclick="start()">Start</button>
+        <button class="button btn_stop" onclick="stop()">Stop</button>
+
     </div>
 </body>
 

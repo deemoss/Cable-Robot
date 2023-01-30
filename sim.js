@@ -4,6 +4,8 @@ var ctx = c.getContext("2d");
 ctx.lineWidth = 12;
 ctx.strokeStyle = 'orange';
 
+var running = false;
+
 // Left origin top left
 var L = {
   x: 0,
@@ -30,20 +32,17 @@ var len_R = 0;
 var theta_L = 0;
 var theta_R = 0;
 
-  var x = 0;
-  var y = 0;
-   var previous_x = x;
-  var previous_y = y;
+var x = 0;
+var y = 0;
+var previous_x = x;
+var previous_y = y;
 
 // Linear Interpolation. Also known as "lerp" or "mix"
 function lerp(start, end, t) {
   return start * (1 - t) + end * t;
 }
 
-function smoothstep (min, max, value) {
-  var z = Math.max(0, Math.min(1, (value-min)/(max-min)));
-  return z*z*(3 - 2*z);
-}
+
 
 // Function to draw line of length at angle
 function lineAtAngle() {
@@ -52,17 +51,18 @@ function lineAtAngle() {
   var radians = theta_L * (Math.PI / 180);
   x = Math.cos(radians) * len_L;
   y = Math.sin(radians) * len_L;
-  
+
   //console.log(x);
 }
 
 
 function draw() {
+
   ctx.clearRect(0, 0, c.width, c.height);
   ctx.beginPath();
 
- 
-  previous_x = lerp(previous_x, x, 0.05);
+
+  previous_x = lerp(previous_x, x, 0.5);
   previous_y = lerp(previous_y, y, 0.5);
 
 
@@ -76,10 +76,11 @@ function draw() {
 
   //console.log(aaa);
 
- requestAnimationFrame(draw);
+  requestAnimationFrame(draw);
 }
 
 async function iteratePositions(delay) {
+
 
   for (let i = 0; i < 10; i += 1) {
     P.x = 500 - 50 * i;
@@ -95,13 +96,27 @@ async function iteratePositions(delay) {
     //theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
 
     //drawFrame();
-    //console.log(x);
-    
+
     lineAtAngle();
-    
+
     await new Promise(res => setTimeout(res, delay));
   }
 }
 
-iteratePositions(3000);
-draw();
+
+function start() {
+
+  if (running) {
+    return;
+  } else if (!running) {
+    var nameValue = document.getElementById("uniqueID").value;
+    iteratePositions(1000);
+    draw();
+    running = true;
+  }
+}
+
+function stop() {
+  location.reload();
+}
+
