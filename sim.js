@@ -1,8 +1,11 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
-ctx.lineWidth = 12;
-ctx.strokeStyle = 'orange';
+var img = new Image();
+img.src = 'wall.webp';
+
+
+window.onload = setBackround;
 
 var running = false;
 
@@ -37,12 +40,35 @@ var y = 0;
 var previous_x = x;
 var previous_y = y;
 
+// scanner dimentions
+var S = {
+  x: 20,
+  y: 20
+};
+
+// Parameters
+var lineW = 3
+
+// Canvas
+var canWidth = 600;
+var canHeight = 300;
+
+document.getElementById("myCanvas").width = canWidth;
+document.getElementById("myCanvas").height = canHeight;
+
+document.getElementById("widthID").value = canWidth;
+document.getElementById("heightID").value = canHeight;
+
+
+
+function setBackround() {
+  ctx.drawImage(img, 0, 0, canWidth, canHeight);
+}
+
 // Linear Interpolation. Also known as "lerp" or "mix"
 function lerp(start, end, t) {
   return start * (1 - t) + end * t;
 }
-
-
 
 // Function to draw line of length at angle
 function lineAtAngle() {
@@ -57,25 +83,43 @@ function lineAtAngle() {
 
 
 function draw() {
-
+  // Clear
   ctx.clearRect(0, 0, c.width, c.height);
-  ctx.beginPath();
+  setBackround();
 
-
+  // Interpolate position od P
   previous_x = lerp(previous_x, x, 0.5);
   previous_y = lerp(previous_y, y, 0.5);
 
-
-  ctx.moveTo(0, 0);
+  // Draw L leg
+  ctx.beginPath();
+  ctx.lineWidth = lineW;
+  ctx.strokeStyle = 'yellow';
+  ctx.moveTo(L.x, L.y);
   ctx.lineTo(previous_x, previous_y);
-
   ctx.stroke();
   ctx.closePath();
 
-  //console.log(previous_x);
+  // Draw R leg
+  ctx.beginPath();
+  ctx.lineWidth = lineW;
+  ctx.strokeStyle = 'yellow';
+  ctx.moveTo(R.x, R.y);
+  ctx.lineTo(previous_x, previous_y);
+  ctx.stroke();
+  ctx.closePath();
+
+  // Draw square
+  ctx.beginPath();
+  ctx.lineWidth = lineW;
+  ctx.strokeStyle = 'yellow';
+  ctx.fillStyle = "black";
+  ctx.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctx.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctx.stroke();
+  ctx.closePath();
 
   //console.log(aaa);
-
   requestAnimationFrame(draw);
 }
 
@@ -88,19 +132,17 @@ async function iteratePositions(delay) {
 
     // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
     len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
-    //len_R = Math.hypot(Math.abs(P.x - R.x), Math.abs(P.y - R.y))
-    // Math.hypot(endX - startX, endY - startY)
+    len_R = Math.hypot(Math.abs(P.x - R.x), Math.abs(P.y - R.y))
 
     // Calculate angles from left ancor point (L), right ancor point (R) and the required position point (P)
     theta_L = Math.atan2(Math.abs(P.y - L.y), Math.abs(P.x - L.x)) * 180 / Math.PI;
-    //theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
-
-    //drawFrame();
+    theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
 
     lineAtAngle();
 
     await new Promise(res => setTimeout(res, delay));
   }
+  running = false;
 }
 
 
@@ -109,7 +151,7 @@ function start() {
   if (running) {
     return;
   } else if (!running) {
-    var nameValue = document.getElementById("uniqueID").value;
+
     iteratePositions(1000);
     draw();
     running = true;
@@ -117,6 +159,25 @@ function start() {
 }
 
 function stop() {
-  location.reload();
+  //location.reload();
+}
+
+function save() {
+
+  if (running) {
+    return;
+  }
+  // save values
+  canWidth = document.getElementById("widthID").value;
+  canHeight = document.getElementById("heightID").value;
+  // set canvas size
+  document.getElementById("myCanvas").width = canWidth;
+  document.getElementById("myCanvas").height = canHeight;
+
+  // update backround picture
+  setBackround();
+
+  // Update Right origin X value
+  R.x = canWidth;
 }
 

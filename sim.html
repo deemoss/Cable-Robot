@@ -7,18 +7,24 @@
 
 <body>
 
-    <h1>This is a heading</h1>
-    <p>A paragraph.</p>
+    <h1>Planar Cable Robot Simulator</h1>
+    <p>Enter Width, Height and Save before running.</p>
+   
+   
     <div>
         <canvas width="600" height="400" id="myCanvas"></canvas>
         <script src="sim.js"></script>
-        
     </div>
-    <div class="absolute">
-        <input type="text" name="name" id="uniqueID" value="500" />
+    <div class="control">
+        <label for="width">Width:</label>
+        <input type="text" name="width" id="widthID" value="600" /><br>
+       
+        <label for="height">Height:</label>
+        <input type="text" name="height" id="heightID" value="400" /><br>
+
+        <button class="button btn_save" onclick="save()">Save</button>
         <button class="button btn_start" onclick="start()">Start</button>
         <button class="button btn_stop" onclick="stop()">Stop</button>
-
     </div>
 </body>
 

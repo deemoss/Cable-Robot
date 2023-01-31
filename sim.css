@@ -1,13 +1,14 @@
+body {
+    font-family: Helvetica, Arial, Sans-Serif;
+  }
+
 canvas {
-    position: absolute;
-    top: 100;
-    left: 0;
+    position: relative;
     border: solid 10px lightgrey;
 }
 
-div.absolute {
-    position: absolute;
-    top: 550px;
+div.control {
+    position: relative;
     width: 400px;
     height: 100px;
     border: 3px solid #73AD21;
@@ -25,13 +26,15 @@ div.absolute {
     cursor: pointer;
 }
 
+.btn_save {
+    background-color: #2bb800;
+}
+
 .btn_start {
     background-color: #008CBA;
 }
 
-/* Blue */
 .btn_stop {
     background-color: #f44336;
 }
 
-/* Red */
