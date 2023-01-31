@@ -51,13 +51,12 @@ var lineW = 3
 
 // Canvas
 var canWidth = 600;
-var canHeight = 300;
+var canHeight = 400;
 
 document.getElementById("myCanvas").width = canWidth;
 document.getElementById("myCanvas").height = canHeight;
 
-document.getElementById("widthID").value = canWidth;
-document.getElementById("heightID").value = canHeight;
+
 
 
 
