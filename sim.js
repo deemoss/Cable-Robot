@@ -128,8 +128,8 @@ function draw() {
   setBackround();
 
   // Interpolate position of P
-  //previous_x = lerp(previous_x, x, 0.05);
-  //previous_y = lerp(previous_y, y, 0.05);
+  //previous_x = lerp(previous_x, x, 0.2);
+  //previous_y = lerp(previous_y, y, 0.2);
 
   // Interpolate position of P with easing
   previous_x = lerp(previous_x, x, easeInOut(0.2));
