@@ -9,22 +9,28 @@
 
     <h1>Planar Cable Robot Simulator</h1>
     <p>Enter Width, Height and Save before running.</p>
-   
-   
-    <div>
-        <canvas width="100" height="100" id="myCanvas"></canvas>
-        <script src="sim.js"></script>
-    </div>
-    <div class="control">
-        <label for="width">Width:</label>
-        <input type="text" name="width" id="widthID" value="600" /><br>
-       
-        <label for="height">Height:</label>
-        <input type="text" name="height" id="heightID" value="400" /><br>
 
-        <button class="button btn_save" onclick="save()">Save</button>
-        <button class="button btn_start" onclick="start()">Start</button>
-        <button class="button btn_stop" onclick="stop()">Stop</button>
+
+    <div id="canv">
+        <canvas width="100" height="100" id="myCanvas"></canvas>
+        <div id="control">
+            <label for="width">Width:</label>
+            <input type="text" name="width" id="widthID" value="" />
+
+            <label for="height">Height:</label>
+            <input type="text" name="height" id="heightID" value="" />
+
+            <button class="button btn_save" id="btn_save" onclick="save()">Set Dimentions</button>
+        
+        </div>
+        <div id="control">
+           
+            <button class="button btn_start" onclick="start()">Start</button>
+            <button class="button btn_stop" onclick="stop()">Stop</button>
+        </div>
+    </div>
+    <div>
+        <script src="sim.js"></script>
     </div>
 </body>
 
