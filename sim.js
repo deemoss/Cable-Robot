@@ -29,11 +29,11 @@ var canvasHeight;
 function setupCanvas() {
   canvasWidth = getCookie('canvasWidth')
   if (canvasWidth == null) {
-    canvasWidth = 200;
+    canvasWidth = 800;
   }
   canvasHeight = getCookie('canvasHeight')
   if (canvasHeight == null) {
-    canvasHeight = 200;
+    canvasHeight = 600;
   }
 }
 
@@ -132,8 +132,8 @@ function draw() {
   //previous_y = lerp(previous_y, y, 0.05);
 
   // Interpolate position of P with easing
-  previous_x = lerp(previous_x, x, easeInOut(0.3));
-  previous_y = lerp(previous_y, y, easeInOut(0.3));
+  previous_x = lerp(previous_x, x, easeInOut(0.2));
+  previous_y = lerp(previous_y, y, easeInOut(0.2));
 
   // Draw L leg
   ctx.beginPath();
