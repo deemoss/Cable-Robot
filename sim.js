@@ -105,6 +105,11 @@ function lerp(start, end, t) {
   return start * (1 - t) + end * t;
 }
 
+function easeInOut(t) {
+  return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+}
+
+
 // Function to draw line of length at angle
 function lineAtAngle() {
 
@@ -122,9 +127,13 @@ function draw() {
   ctx.clearRect(0, 0, c.width, c.height);
   setBackround();
 
-  // Interpolate position od P
-  previous_x = lerp(previous_x, x, 0.05);
-  previous_y = lerp(previous_y, y, 0.05);
+  // Interpolate position of P
+  //previous_x = lerp(previous_x, x, 0.05);
+  //previous_y = lerp(previous_y, y, 0.05);
+
+  // Interpolate position of P with easing
+  previous_x = lerp(previous_x, x, easeInOut(0.3));
+  previous_y = lerp(previous_y, y, easeInOut(0.3));
 
   // Draw L leg
   ctx.beginPath();
@@ -155,9 +164,8 @@ function draw() {
 
   // Draw square
   var solidColor;
-  if (Math.abs(previous_x - x) < 2) {
+  if (Math.abs(previous_x - x) < 1) {
     solidColor = 'white'
-
   } else {
     solidColor = 'black'
   }
@@ -178,8 +186,8 @@ function draw() {
 async function iteratePositions(delay) {
   for (let j = 1; j < 10; j++) {
     P.y = 0 + canvasHeight / 10 * j;
-    for (let i = 1; i < 5; i += 1) {
-      P.x = 0 + canvasWidth / 5 * i;
+    for (let i = 1; i < 20; i += 1) {
+      P.x = 0 + canvasWidth / 20 * i;
 
 
       // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
@@ -246,7 +254,7 @@ function save() {
 // Get the input field
 var widthInput = document.getElementById("widthID");
 // Execute a function when the user presses a key on the keyboard
-widthInput.addEventListener("keypress", function(event) {
+widthInput.addEventListener("keypress", function (event) {
   // If the user presses the "Enter" key on the keyboard
   if (event.key === "Enter") {
     // Cancel the default action, if needed
@@ -257,7 +265,7 @@ widthInput.addEventListener("keypress", function(event) {
 });
 
 var widthInput = document.getElementById("heightID");
-heightID.addEventListener("keypress", function(event) {
+heightID.addEventListener("keypress", function (event) {
   // If the user presses the "Enter" key on the keyboard
   if (event.key === "Enter") {
     // Cancel the default action, if needed
