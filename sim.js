@@ -4,23 +4,21 @@ var ctx = c.getContext("2d");
 var img = new Image();
 img.src = 'wall.webp';
 
+var myReq;
+var stepTime = 1000;
+var moveToSCanRatio = 0.5; 
+
 // Read coockies
 function getCookie(name) {
-  // Split cookie string and get all individual name=value pairs in an array
   var cookieArr = document.cookie.split(";");
-  // Loop through the array elements
   for (var i = 0; i < cookieArr.length; i++) {
     var cookiePair = cookieArr[i].split("=");
-    // Removing whitespace at the beginning of the cookie name and compare it with the given string
     if (name == cookiePair[0].trim()) {
-      // Decode the cookie value and return
       return decodeURIComponent(cookiePair[1]);
     }
   }
-  // Return null if not found
-  return null;
+  return null; // Return null if not found
 }
-
 
 // Canvas read stored dimentions
 var canvasWidth;
@@ -39,8 +37,6 @@ function setupCanvas() {
 
 setupCanvas();
 window.onload = setBackround;
-
-
 
 var running = false;
 
@@ -81,16 +77,14 @@ var S = {
   y: 20
 };
 
+
+
 // Parameters
 var lineW = 3
 
-
-
 document.getElementById("myCanvas").width = canvasWidth;
 document.getElementById("myCanvas").height = canvasHeight;
-
 document.getElementById("canv").style.width = canvasWidth + 'px';
-
 document.getElementById("widthID").value = canvasWidth;
 document.getElementById("heightID").value = canvasHeight;
 
@@ -109,31 +103,45 @@ function easeInOut(t) {
   return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
 }
 
-
 // Function to draw line of length at angle
 function lineAtAngle() {
-
-  // Calculate coords from lengths and angles
   var radians = theta_L * (Math.PI / 180);
   x = Math.cos(radians) * len_L;
   y = Math.sin(radians) * len_L;
-
-  //console.log(x);
 }
 
-
 function draw() {
-  // Clear
-  ctx.clearRect(0, 0, c.width, c.height);
-  setBackround();
+
 
   // Interpolate position of P
   //previous_x = lerp(previous_x, x, 0.2);
   //previous_y = lerp(previous_y, y, 0.2);
-
   // Interpolate position of P with easing
-  previous_x = lerp(previous_x, x, easeInOut(0.2));
-  previous_y = lerp(previous_y, y, easeInOut(0.2));
+  //previous_x = lerp(previous_x, x, easeInOut(0.2));
+  //previous_y = lerp(previous_y, y, easeInOut(0.2));
+
+
+  previous_x = previous_x + 2;
+  //previous_y = previous_y + 2;
+
+  framesToGo = x - previous_x -1;
+
+
+  if (framesToGo <= 0) {
+    cancelAnimationFrame(myReq);
+    framesToGo = 0;
+    previous_x = x;
+    previous_y = y;
+
+    return;
+  }
+
+  console.log(' framesToGo: ' + framesToGo +' previous_x: ' + previous_x + ' x: ' + x );
+
+  // Clear
+  ctx.clearRect(0, 0, c.width, c.height);
+  setBackround();
+
 
   // Draw L leg
   ctx.beginPath();
@@ -179,8 +187,7 @@ function draw() {
   ctx.stroke();
   ctx.closePath();
 
-  //console.log(aaa);
-  requestAnimationFrame(draw);
+  myReq = requestAnimationFrame(draw);
 }
 
 async function iteratePositions(delay) {
@@ -188,7 +195,6 @@ async function iteratePositions(delay) {
     P.y = 0 + canvasHeight / 10 * j;
     for (let i = 1; i < 20; i += 1) {
       P.x = 0 + canvasWidth / 20 * i;
-
 
       // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
       len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
@@ -199,23 +205,24 @@ async function iteratePositions(delay) {
       theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
 
       lineAtAngle();
-
+      draw();
       // Delay step
       await new Promise(res => setTimeout(res, delay));
+      console.log('itterate')
     }
   }
+
   running = false;
 }
 
-
 function start() {
-
   if (running) {
     return;
   } else if (!running) {
+    iteratePositions(stepTime);
+    //draw();
+    //myReq = requestAnimationFrame(draw);
 
-    iteratePositions(1500);
-    draw();
     running = true;
   }
 }
@@ -225,7 +232,6 @@ function stop() {
 }
 
 function save() {
-
   if (running) {
     return;
   }
@@ -242,14 +248,12 @@ function save() {
   // update backround picture
   setBackround();
 
-  console.log(canvasHeight);
+  //console.log(canvasHeight);
 
   // Update Right origin X value
   R.x = canvasWidth;
   location.reload();
-
 }
-
 
 // Get the input field
 var widthInput = document.getElementById("widthID");
