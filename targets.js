@@ -62,7 +62,7 @@ function drawTarget(x, y, d) {
     ctxTgt.beginPath();
     ctxTgt.globalAlpha = 1;
     ctxTgt.arc(x, y, 1, 0, 2 * Math.PI);
-    ctxTgt.fillStyle = "white";
+    ctxTgt.fillStyle = 'white';
     ctxTgt.fill();
 
     console.log(d / 3 < 3 ? 3 : d / 3);
