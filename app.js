@@ -1,4 +1,5 @@
 import { drawBackground } from './background.js';
+import { drawTargets, targetArray } from './targets.js';
 
 //var ctxBkg = document.getElementById('myBkg').getContext('2d');
 var ctxSim = document.getElementById('mySim').getContext('2d');
@@ -6,6 +7,9 @@ var ctxSim = document.getElementById('mySim').getContext('2d');
 var myReq;
 var stepTime = 1000;
 var moveToSCanRatio = 0.5;
+var running = false;
+var canvasWidth = 0;  // Canvas read stored dimentions
+var canvasHeight = 0; // Canvas read stored dimentions
 
 // Read coockies
 function getCookie(name) {
@@ -19,22 +23,14 @@ function getCookie(name) {
   return null; // Return null if not found
 }
 
-// Canvas read stored dimentions
-var canvasWidth = 0;
-var canvasHeight = 0;
-
-function setupCanvas() {
-  canvasWidth = getCookie('canvasWidth')
-  if (canvasWidth == null) {
-    canvasWidth = 800;
-  }
-  canvasHeight = getCookie('canvasHeight')
-  if (canvasHeight == null) {
-    canvasHeight = 600;
-  }
+function setupCanvases() {
+  canvasWidth = getCookie('canvasWidth') == null ? 800 : getCookie('canvasWidth');
+  canvasHeight = getCookie('canvasHeight') == null ? 600 : getCookie('canvasHeight');
 
   document.getElementById("myBkg").width = canvasWidth;
   document.getElementById("myBkg").height = canvasHeight;
+  document.getElementById("myTgt").width = canvasWidth;
+  document.getElementById("myTgt").height = canvasHeight;
   document.getElementById("mySim").width = canvasWidth;
   document.getElementById("mySim").height = canvasHeight;
   document.getElementById("app").style.width = canvasWidth + 'px';
@@ -42,48 +38,22 @@ function setupCanvas() {
   document.getElementById("heightID").value = canvasHeight;
 }
 
-setupCanvas();
+setupCanvases();
 window.onload = drawBackground(canvasWidth, canvasHeight);
+drawTargets(canvasWidth, canvasHeight, 50);
 
-var running = false;
-
-// Left origin top left
-var L = {
-  x: 0,
-  y: 0
-};
-
-// Right origin top right
-var R = {
-  x: canvasWidth,
-  y: 0
-};
-
-// Given position coordinates
-var P = {
-  x: 0,
-  y: 0
-};
-
-// Left and right lengths
-var len_L = 0;
-var len_R = 0;
-
-// Left and right angles
-var theta_L = 0;
-var theta_R = 0;
-
+var L = { x: 0, y: 0 };           // Left origin top left
+var R = { x: canvasWidth, y: 0 }; // Right origin top right
+var P = { x: 0, y: 0 };           // Given position coordinates
+var len_L = 0; // Left length
+var len_R = 0; // Right length
+var theta_L = 0; // Left angle
+var theta_R = 0; // Right angle
 var x = canvasWidth / 2;
 var y = canvasHeight / 2;
 var previous_x = x;
 var previous_y = y;
-
-// scanner dimentions
-var S = {
-  x: 20,
-  y: 20
-};
-
+var S = { x: 20, y: 20 }; // scanner dimentions
 // Parameters
 var lineW = 3
 
@@ -105,8 +75,6 @@ function lineAtAngle() {
   y = Math.sin(radians) * len_L;
 }
 
-
-
 function drawSim() {
   previous_x = previous_x + 2;
   var framesToGo = x - previous_x - 1;
@@ -117,12 +85,10 @@ function drawSim() {
     previous_y = y;
     return;
   }
-  //console.log(' framesToGo: ' + framesToGo + ' previous_x: ' + previous_x + ' x: ' + x);
-  // Clear
+
   ctxSim.clearRect(0, 0, canvasWidth, canvasHeight);
 
-  // Draw L leg
-  ctxSim.beginPath();
+  ctxSim.beginPath();   // Draw L leg
   ctxSim.lineWidth = lineW;
   ctxSim.strokeStyle = 'yellow';
   ctxSim.moveTo(L.x, L.y);
@@ -130,8 +96,7 @@ function drawSim() {
   ctxSim.stroke();
   ctxSim.closePath();
 
-  // Draw R leg
-  ctxSim.beginPath();
+  ctxSim.beginPath();   // Draw R leg
   ctxSim.lineWidth = lineW;
   ctxSim.strokeStyle = 'yellow';
   ctxSim.moveTo(R.x, R.y);
@@ -143,25 +108,8 @@ function drawSim() {
   ctxSim.lineWidth = lineW;
   ctxSim.strokeStyle = 'yellow';
   ctxSim.fillStyle = "white";
-  ctxSim.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctxSim.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctxSim.stroke();
-  ctxSim.closePath();
-
-  // Draw square
-  var solidColor;
-  if (Math.abs(previous_x - x) < 1) {
-    solidColor = 'white'
-  } else {
-    solidColor = 'black'
-  }
-
-  ctxSim.beginPath();
-  ctxSim.lineWidth = lineW;
-  ctxSim.strokeStyle = 'yellow';
-  ctxSim.fillStyle = solidColor;
-  ctxSim.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctxSim.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctxSim.fillRect(previous_x - S.x / 2, previous_y - S.y / 2, S.x, S.y);
+  ctxSim.strokeRect(previous_x - S.x / 2, previous_y - S.y / 2, S.x, S.y);
   ctxSim.stroke();
   ctxSim.closePath();
 
@@ -169,10 +117,12 @@ function drawSim() {
 }
 
 async function iteratePositions(delay) {
-  for (let j = 1; j < 10; j++) {
-    P.y = 0 + canvasHeight / 10 * j;
-    for (let i = 1; i < 20; i += 1) {
-      P.x = 0 + canvasWidth / 20 * i;
+  for (var i = 0; i < targetArray.length; i++) {
+    var target = targetArray[i];
+    for (var j = 0; j < target.length; j++) {
+      //console.log("terget[" + i + "][" + j + "] = " + target[j].y + " " + target[j].x);
+      P.x = target[j].x;
+      P.y = target[j].y;
 
       // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
       len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
@@ -189,6 +139,7 @@ async function iteratePositions(delay) {
       //console.log('itterate')
     }
   }
+
 
   running = false;
 }
