@@ -1,12 +1,11 @@
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
+import { drawBackground } from './background.js';
 
-var img = new Image();
-img.src = 'wall.webp';
+//var ctxBkg = document.getElementById('myBkg').getContext('2d');
+var ctxSim = document.getElementById('mySim').getContext('2d');
 
 var myReq;
 var stepTime = 1000;
-var moveToSCanRatio = 0.5; 
+var moveToSCanRatio = 0.5;
 
 // Read coockies
 function getCookie(name) {
@@ -21,8 +20,8 @@ function getCookie(name) {
 }
 
 // Canvas read stored dimentions
-var canvasWidth;
-var canvasHeight;
+var canvasWidth = 0;
+var canvasHeight = 0;
 
 function setupCanvas() {
   canvasWidth = getCookie('canvasWidth')
@@ -33,10 +32,18 @@ function setupCanvas() {
   if (canvasHeight == null) {
     canvasHeight = 600;
   }
+
+  document.getElementById("myBkg").width = canvasWidth;
+  document.getElementById("myBkg").height = canvasHeight;
+  document.getElementById("mySim").width = canvasWidth;
+  document.getElementById("mySim").height = canvasHeight;
+  document.getElementById("app").style.width = canvasWidth + 'px';
+  document.getElementById("widthID").value = canvasWidth;
+  document.getElementById("heightID").value = canvasHeight;
 }
 
 setupCanvas();
-window.onload = setBackround;
+window.onload = drawBackground(canvasWidth, canvasHeight);
 
 var running = false;
 
@@ -77,22 +84,10 @@ var S = {
   y: 20
 };
 
-
-
 // Parameters
 var lineW = 3
 
-document.getElementById("myCanvas").width = canvasWidth;
-document.getElementById("myCanvas").height = canvasHeight;
-document.getElementById("canv").style.width = canvasWidth + 'px';
-document.getElementById("widthID").value = canvasWidth;
-document.getElementById("heightID").value = canvasHeight;
-
-draw();
-
-function setBackround() {
-  ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-}
+drawSim();
 
 // Linear Interpolation. Also known as "lerp" or "mix"
 function lerp(start, end, t) {
@@ -110,65 +105,48 @@ function lineAtAngle() {
   y = Math.sin(radians) * len_L;
 }
 
-function draw() {
 
 
-  // Interpolate position of P
-  //previous_x = lerp(previous_x, x, 0.2);
-  //previous_y = lerp(previous_y, y, 0.2);
-  // Interpolate position of P with easing
-  //previous_x = lerp(previous_x, x, easeInOut(0.2));
-  //previous_y = lerp(previous_y, y, easeInOut(0.2));
-
-
+function drawSim() {
   previous_x = previous_x + 2;
-  //previous_y = previous_y + 2;
-
-  framesToGo = x - previous_x -1;
-
-
+  var framesToGo = x - previous_x - 1;
   if (framesToGo <= 0) {
     cancelAnimationFrame(myReq);
     framesToGo = 0;
     previous_x = x;
     previous_y = y;
-
     return;
   }
-
-  console.log(' framesToGo: ' + framesToGo +' previous_x: ' + previous_x + ' x: ' + x );
-
+  //console.log(' framesToGo: ' + framesToGo + ' previous_x: ' + previous_x + ' x: ' + x);
   // Clear
-  ctx.clearRect(0, 0, c.width, c.height);
-  setBackround();
-
+  ctxSim.clearRect(0, 0, canvasWidth, canvasHeight);
 
   // Draw L leg
-  ctx.beginPath();
-  ctx.lineWidth = lineW;
-  ctx.strokeStyle = 'yellow';
-  ctx.moveTo(L.x, L.y);
-  ctx.lineTo(previous_x, previous_y);
-  ctx.stroke();
-  ctx.closePath();
+  ctxSim.beginPath();
+  ctxSim.lineWidth = lineW;
+  ctxSim.strokeStyle = 'yellow';
+  ctxSim.moveTo(L.x, L.y);
+  ctxSim.lineTo(previous_x, previous_y);
+  ctxSim.stroke();
+  ctxSim.closePath();
 
   // Draw R leg
-  ctx.beginPath();
-  ctx.lineWidth = lineW;
-  ctx.strokeStyle = 'yellow';
-  ctx.moveTo(R.x, R.y);
-  ctx.lineTo(previous_x, previous_y);
-  ctx.stroke();
-  ctx.closePath();
+  ctxSim.beginPath();
+  ctxSim.lineWidth = lineW;
+  ctxSim.strokeStyle = 'yellow';
+  ctxSim.moveTo(R.x, R.y);
+  ctxSim.lineTo(previous_x, previous_y);
+  ctxSim.stroke();
+  ctxSim.closePath();
 
-  ctx.beginPath();
-  ctx.lineWidth = lineW;
-  ctx.strokeStyle = 'yellow';
-  ctx.fillStyle = "white";
-  ctx.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctx.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctx.stroke();
-  ctx.closePath();
+  ctxSim.beginPath();
+  ctxSim.lineWidth = lineW;
+  ctxSim.strokeStyle = 'yellow';
+  ctxSim.fillStyle = "white";
+  ctxSim.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctxSim.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctxSim.stroke();
+  ctxSim.closePath();
 
   // Draw square
   var solidColor;
@@ -178,16 +156,16 @@ function draw() {
     solidColor = 'black'
   }
 
-  ctx.beginPath();
-  ctx.lineWidth = lineW;
-  ctx.strokeStyle = 'yellow';
-  ctx.fillStyle = solidColor;
-  ctx.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctx.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
-  ctx.stroke();
-  ctx.closePath();
+  ctxSim.beginPath();
+  ctxSim.lineWidth = lineW;
+  ctxSim.strokeStyle = 'yellow';
+  ctxSim.fillStyle = solidColor;
+  ctxSim.fillRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctxSim.strokeRect(previous_x - S.x / 2, previous_y, S.x, S.y);
+  ctxSim.stroke();
+  ctxSim.closePath();
 
-  myReq = requestAnimationFrame(draw);
+  myReq = requestAnimationFrame(drawSim);
 }
 
 async function iteratePositions(delay) {
@@ -205,10 +183,10 @@ async function iteratePositions(delay) {
       theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
 
       lineAtAngle();
-      draw();
+      drawSim();
       // Delay step
       await new Promise(res => setTimeout(res, delay));
-      console.log('itterate')
+      //console.log('itterate')
     }
   }
 
@@ -220,7 +198,7 @@ function start() {
     return;
   } else if (!running) {
     iteratePositions(stepTime);
-    //draw();
+    drawSim();
     //myReq = requestAnimationFrame(draw);
 
     running = true;
@@ -241,12 +219,15 @@ function save() {
   // Write cookies
   document.cookie = "canvasWidth=" + canvasWidth;
   document.cookie = "canvasHeight=" + canvasHeight;
+
   // set canvas size
-  document.getElementById("myCanvas").width = canvasWidth;
-  document.getElementById("myCanvas").height = canvasHeight;
+  document.getElementById("myBkg").width = canvasWidth;
+  document.getElementById("myBkg").height = canvasHeight;
+  document.getElementById("mySim").width = canvasWidth;
+  document.getElementById("mySim").height = canvasHeight;
 
   // update backround picture
-  setBackround();
+  drawBackground(canvasWidth, canvasHeight);
 
   //console.log(canvasHeight);
 
@@ -255,26 +236,24 @@ function save() {
   location.reload();
 }
 
-// Get the input field
+// Get width
 var widthInput = document.getElementById("widthID");
-// Execute a function when the user presses a key on the keyboard
-widthInput.addEventListener("keypress", function (event) {
-  // If the user presses the "Enter" key on the keyboard
+widthInput.addEventListener("keypress", function (event) {  // Execute a function when the user presses a key on the keyboard
+  if (event.key === "Enter") {    // If the user presses the "Enter" key on the keyboard
+    event.preventDefault();       // Cancel the default action, if needed
+    document.getElementById("btn_save").click();  // Trigger the button element with a click
+  }
+});
+
+// Get height
+var hightInput = document.getElementById("heightID");
+heightID.addEventListener("keypress", function (event) {
   if (event.key === "Enter") {
-    // Cancel the default action, if needed
     event.preventDefault();
-    // Trigger the button element with a click
     document.getElementById("btn_save").click();
   }
 });
 
-var widthInput = document.getElementById("heightID");
-heightID.addEventListener("keypress", function (event) {
-  // If the user presses the "Enter" key on the keyboard
-  if (event.key === "Enter") {
-    // Cancel the default action, if needed
-    event.preventDefault();
-    // Trigger the button element with a click
-    document.getElementById("btn_save").click();
-  }
-});
+document.getElementById("btn_start").addEventListener("click", start);
+document.getElementById("btn_stop").addEventListener("click", stop);
+document.getElementById("btn_save").addEventListener("click", save);

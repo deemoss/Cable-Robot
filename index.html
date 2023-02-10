@@ -2,32 +2,34 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="sim.css">
+    <link rel="stylesheet" href="app.css">
 </head>
 
 <body>
-    <div id="canv">
-        <h2>Planar Cable Robot Simulator v0.93</h2>
-    <p>Enter the width and the height of the wall to be scanned and "Set Dimensions" before running. Black square indicates motion, white square indicates scanning.</p>
-        <canvas width="100" height="100" id="myCanvas"></canvas>
+
+    <div id="app">
+        <h2>Planar Cable Robot Simulator v0.94</h2>
+        <p>Enter the width and the height of the wall to be scanned and "Set Dimensions" before running. Black square
+            indicates motion, white square indicates scanning.</p>
+
         <div id="control">
             <label for="width">Width:</label>
             <input type="text" name="width" id="widthID" value="" />
-
             <label for="height">Height:</label>
             <input type="text" name="height" id="heightID" value="" />
-
-            <button class="button btn_save" id="btn_save" onclick="save()">Set Dimentions</button>
-        
+            <button class="button btn_save" id="btn_save">Set Dimentions</button>
+            <button class="button btn_start" id="btn_start">Start</button>
+            <button class="button btn_stop" id="btn_stop">Stop</button>
         </div>
-        <div id="control">
-           
-            <button class="button btn_start" onclick="start()">Start</button>
-            <button class="button btn_stop" onclick="stop()">Stop</button>
+        <div id="stack">
+            <canvas id="myBkg" width="100" height="100" style="border:10px solid #1247f6;"></canvas>
+            <canvas id="mySim" width="100" height="100" style="border:5px solid #f61293;"></canvas>
         </div>
     </div>
     <div>
-        <script src="sim.js"></script>
+        <script type="module" src="./app.js"></script>
     </div>
+
 </body>
+
 </html>
