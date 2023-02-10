@@ -3,6 +3,7 @@ var ctxBkg = document.getElementById('myBkg').getContext('2d');
 var img = new Image();
 img.src = './wall.webp'
 
+
 var canvasWidth = 0;
 var canvasHeight = 0;
 
