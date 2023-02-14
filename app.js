@@ -141,7 +141,7 @@ async function iteratePositions(delay) {
         drawSim();
         // Delay step
         await new Promise(res => setTimeout(res, delay));
-        //console.log('itterate')
+        console.log('itterate')
       } else {
         //Quit
         return;
@@ -158,9 +158,10 @@ function start() {
   if (running) {
     return;
   } else if (!running) {
+    running = true;
+    quit = false;
     iteratePositions(stepTime);
     //myReq = requestAnimationFrame(draw);
-    running = true;
   }
 }
 
