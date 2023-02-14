@@ -124,24 +124,30 @@ async function iteratePositions(delay) {
   for (var i = 0; i < targetArray.length; i++) {
     var target = targetArray[i];
     for (var j = 0; j < target.length; j++) {
-      if (!quit) {
+      if (!quit) { // Skip and exit if stopp button pressed
         //console.log("terget[" + i + "][" + j + "] = " + target[j].y + " " + target[j].x);
-        P.x = target[j].x;
-        P.y = target[j].y;
 
-        // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
-        len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
-        len_R = Math.hypot(Math.abs(P.x - R.x), Math.abs(P.y - R.y))
+        if (P.x = target[j].a == 1) { // only do this if target point is active
+          P.x = target[j].x;
+          P.y = target[j].y;
 
-        // Calculate angles from left ancor point (L), right ancor point (R) and the required position point (P)
-        theta_L = Math.atan2(Math.abs(P.y - L.y), Math.abs(P.x - L.x)) * 180 / Math.PI;
-        theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
+          // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
+          len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
+          len_R = Math.hypot(Math.abs(P.x - R.x), Math.abs(P.y - R.y))
 
-        lineAtAngle();
-        drawSim();
-        // Delay step
-        await new Promise(res => setTimeout(res, delay));
-        console.log('itterate')
+          // Calculate angles from left ancor point (L), right ancor point (R) and the required position point (P)
+          theta_L = Math.atan2(Math.abs(P.y - L.y), Math.abs(P.x - L.x)) * 180 / Math.PI;
+          theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
+
+          lineAtAngle();
+          drawSim();
+          // Delay step
+          await new Promise(res => setTimeout(res, delay));
+          //console.log('itterate')
+        }
+
+
+
       } else {
         //Quit
         return;
