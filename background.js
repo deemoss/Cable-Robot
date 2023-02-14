@@ -1,9 +1,13 @@
+
+
+
 var canvasBkg = document.getElementById('myBkg');
 var ctxBkg = canvasBkg.getContext('2d');
 
 
 var img = new Image();
 img.src = './wall.webp'
+
 
 
 var canvasWidth = 0;

@@ -1,5 +1,7 @@
 import { drawBackground } from './background.js';
-import { drawTargets, checkMouseOnTarget, targetArray } from './targets.js';
+import { drawTargets, checkMouseOnTarget, initialisePointer, setSelectionExp, targetArray } from './targets.js';
+
+
 
 //var ctxBkg = document.getElementById('myBkg').getContext('2d');
 var canvasSim = document.getElementById('mySim');
@@ -40,6 +42,8 @@ function setupCanvases() {
   document.getElementById("widthID").value = canvasWidth;
   document.getElementById("heightID").value = canvasHeight;
 }
+
+
 
 setupCanvases();
 window.onload = drawBackground(canvasWidth, canvasHeight);
@@ -125,8 +129,6 @@ async function iteratePositions(delay) {
     var target = targetArray[i];
     for (var j = 0; j < target.length; j++) {
       if (!quit) { // Skip and exit if stopp button pressed
-        //console.log("terget[" + i + "][" + j + "] = " + target[j].y + " " + target[j].x);
-
         if (P.x = target[j].a == 1) { // only do this if target point is active
           P.x = target[j].x;
           P.y = target[j].y;
@@ -145,17 +147,12 @@ async function iteratePositions(delay) {
           await new Promise(res => setTimeout(res, delay));
           //console.log('itterate')
         }
-
-
-
       } else {
         //Quit
         return;
       }
     }
-
   }
-
 
   running = false;
 }
@@ -203,6 +200,11 @@ function save() {
   location.reload();
 }
 
+function resizeCursor(size) {
+  setSelectionExp(size)
+  initialisePointer();
+}
+
 // Get width
 var widthInput = document.getElementById("widthID");
 widthInput.addEventListener("keypress", function (event) {  // Execute a function when the user presses a key on the keyboard
@@ -225,12 +227,10 @@ document.getElementById("btn_start").addEventListener("click", start);
 document.getElementById("btn_stop").addEventListener("click", stop);
 document.getElementById("btn_save").addEventListener("click", save);
 
-/*
-//report the mouse position on click
-canvasSim.addEventListener("click", function (evt) {
-  var mousePos = getMousePos(canvasSim, evt);
-  //console.log(mousePos.x + ',' + mousePos.y);
-}, false);*/
+//document.getElementById("curSize").addEventListener("input", resizeCursor);
+document.getElementById("curSize").addEventListener("input", function(){
+  resizeCursor(this.value);
+});
 
 
 // DE-SELECT TARGET POINTS

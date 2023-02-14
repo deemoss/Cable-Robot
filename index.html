@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="app.css">
+    <link href="./pointer/pointer.css" rel="stylesheet">
 </head>
 
 <body>
@@ -13,16 +14,21 @@
             indicates motion, white square indicates scanning.</p>
 
         <div id="control">
-            <label for="width">Width:</label>
+            <label for="widthID">Width:</label>
             <input type="text" name="width" id="widthID" value="" />
-            <label for="height">Height:</label>
+
+            <label for="heightID">Height:</label>
             <input type="text" name="height" id="heightID" value="" />
+
+            <label for="curSize">Cursor size:</label>
+            <input type="range" id="curSize" name="curSize" min="1" max="10">
+
             <button class="button btn_save" id="btn_save">Set Dimentions</button>
             <button class="button btn_start" id="btn_start">Start</button>
             <button class="button btn_stop" id="btn_stop">Stop</button>
         </div>
         <div id="stack">
-           
+
             <canvas id="myBkg" width="100" height="100"></canvas>
             <canvas id="myTgt" width="100" height="100"></canvas>
             <canvas id="mySim" width="100" height="100"></canvas>
@@ -35,6 +41,8 @@
     </div>
     <div>
         <script type="module" src="./app.js"></script>
+        <script type="module" src="./pointer/pointer.js"></script>
+
     </div>
 
 </body>

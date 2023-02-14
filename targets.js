@@ -1,3 +1,5 @@
+import { init_pointer } from './pointer/pointer.js';
+
 var canvasTgt = document.getElementById('myTgt');
 var ctxTgt = canvasTgt.getContext('2d');
 
@@ -6,11 +8,12 @@ var targetArray = []; // x, y, a (a = active = 0/1)
 var reDraw = false;
 var circDiamMin = 5;
 var circDiam;
-var sellectionExp = 3;
+window.sellectionExp = 3;
 
 
 var nga = { l: 50, r: 50, t: 100, b: 50 }; // No - go margins
 var goa = { x: 0, y: 0, w: 0, h: 0 }; // Go - Area
+
 
 function drawTargets(step) {
     //canvasWidth = width;
@@ -40,12 +43,21 @@ function drawTargets(step) {
         for (var j = 0; j < target.length; j++) {
             //console.log("terget[" + i + "][" + j + "] = " + target[j].y + " " + target[j].x);
 
-            circDiam = (goa.h / targetArray.length / 4) < circDiamMin ? 0 : (goa.h / targetArray.length / 4) // Calculate adaptive diameter of target
+            circDiam = (goa.h / targetArray.length / 4) < circDiamMin ? 1 : (goa.h / targetArray.length / 4) // Calculate adaptive diameter of target
 
             target[j].a && drawTarget(target[j].x, target[j].y);   //  only drwa if a = 1
         }
     }
+    initialisePointer();
 }
+
+function setSelectionExp(size) {
+    sellectionExp = size;
+}
+function initialisePointer() {
+    init_pointer({ pointerColor: "#fff", ringSize: circDiam * sellectionExp, ringClickSize: circDiam * sellectionExp });
+}
+
 
 function makeTargetsArray(s) { // makes array of target coordinates
     var vTargets = Math.floor((goa.h - circDiamMin) / s) + 1;
@@ -77,30 +89,12 @@ function drawTarget(x, y) { // raws a terget
     //console.log(d / 3 < 3 ? 3 : d / 3);
 }
 
-/*
-function checkMouseOnTarget(click) { // x,y is the point to test. cx, cy is circle center, and radius is circle radius
-    for (var i = 0; i < targetArray.length; i++) {
-        var target = targetArray[i];
-        for (var j = 0; j < target.length; j++) {
-            var distanceSqrd = (click.x - target[j].x) * (click.x - target[j].x) + (click.y - target[j].y) * (click.y - target[j].y);
-            var circDiamSqrd = circDiam * circDiam;
-            if (distanceSqrd < circDiamSqrd * sellectionExp) {
-                targetArray[i][j].a = 0;   // set a (active) to 0
-                //console.log(distanceSqrd <= circDiamSqrd);
-                console.log(targetArray[i][j]);
-            }
-        }
-    }
-    // now that the matrix of targets have been updated with inactive objects (a=0), redraw the targets (only active (a=1))
-    updateTargets();
-}*/
-
 function checkMouseOnTarget(click) { // x,y is the point to test. cx, cy is circle center, and radius is circle radius
     for (var i = 0; i < targetArray.length; i++) {
         var target = targetArray[i];
         for (var j = 0; j < target.length; j++) {
             var distance = Math.sqrt((click.x - target[j].x) * (click.x - target[j].x) + (click.y - target[j].y) * (click.y - target[j].y));
-            if (distance < circDiam * sellectionExp) {
+            if (distance < (circDiam + 1) * sellectionExp) {
                 targetArray[i][j].a = 0;   // set a (active) to 0
                 console.log(targetArray[i][j]);
             }
@@ -109,13 +103,14 @@ function checkMouseOnTarget(click) { // x,y is the point to test. cx, cy is circ
     // now that the matrix of targets have been updated with inactive objects (a=0), redraw the targets (only active (a=1))
     updateTargets();
 }
+
 
 function updateTargets() {
     reDraw = true;
     drawTargets();
 }
 
-export { drawTargets, checkMouseOnTarget, targetArray };
+export { drawTargets, checkMouseOnTarget, initialisePointer, setSelectionExp, targetArray };
 
 // UI to set no go areas
 // UI to select step size
