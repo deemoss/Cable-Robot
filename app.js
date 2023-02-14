@@ -1,15 +1,18 @@
 import { drawBackground } from './background.js';
-import { drawTargets, targetArray } from './targets.js';
+import { drawTargets, checkMouseOnTarget, targetArray } from './targets.js';
 
 //var ctxBkg = document.getElementById('myBkg').getContext('2d');
-var ctxSim = document.getElementById('mySim').getContext('2d');
+var canvasSim = document.getElementById('mySim');
+var ctxSim = canvasSim.getContext('2d');
+
 
 var myReq;
 var stepTime = 1000;
 var moveToSCanRatio = 0.5;
 var running = false;
-var canvasWidth = 0;  // Canvas read stored dimentions
-var canvasHeight = 0; // Canvas read stored dimentions
+var quit = false;
+window.canvasWidth = 0;  // Canvas read stored dimentions, window makes it global
+window.canvasHeight = 0; // Canvas read stored dimentions
 
 // Read coockies
 function getCookie(name) {
@@ -40,7 +43,7 @@ function setupCanvases() {
 
 setupCanvases();
 window.onload = drawBackground(canvasWidth, canvasHeight);
-drawTargets(canvasWidth, canvasHeight, 50);
+drawTargets(30);
 
 var L = { x: 0, y: 0 };           // Left origin top left
 var R = { x: canvasWidth, y: 0 }; // Right origin top right
@@ -117,27 +120,34 @@ function drawSim() {
 }
 
 async function iteratePositions(delay) {
+
   for (var i = 0; i < targetArray.length; i++) {
     var target = targetArray[i];
     for (var j = 0; j < target.length; j++) {
-      //console.log("terget[" + i + "][" + j + "] = " + target[j].y + " " + target[j].x);
-      P.x = target[j].x;
-      P.y = target[j].y;
+      if (!quit) {
+        //console.log("terget[" + i + "][" + j + "] = " + target[j].y + " " + target[j].x);
+        P.x = target[j].x;
+        P.y = target[j].y;
 
-      // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
-      len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
-      len_R = Math.hypot(Math.abs(P.x - R.x), Math.abs(P.y - R.y))
+        // Calculate lengthas from left ancor point (L), right ancor point (R) and the required position point (P)
+        len_L = Math.hypot(Math.abs(P.x - L.x), Math.abs(P.y - L.y))
+        len_R = Math.hypot(Math.abs(P.x - R.x), Math.abs(P.y - R.y))
 
-      // Calculate angles from left ancor point (L), right ancor point (R) and the required position point (P)
-      theta_L = Math.atan2(Math.abs(P.y - L.y), Math.abs(P.x - L.x)) * 180 / Math.PI;
-      theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
+        // Calculate angles from left ancor point (L), right ancor point (R) and the required position point (P)
+        theta_L = Math.atan2(Math.abs(P.y - L.y), Math.abs(P.x - L.x)) * 180 / Math.PI;
+        theta_R = Math.atan2(Math.abs(P.y - R.y), Math.abs(P.x - R.x)) * 180 / Math.PI;
 
-      lineAtAngle();
-      drawSim();
-      // Delay step
-      await new Promise(res => setTimeout(res, delay));
-      //console.log('itterate')
+        lineAtAngle();
+        drawSim();
+        // Delay step
+        await new Promise(res => setTimeout(res, delay));
+        //console.log('itterate')
+      } else {
+        //Quit
+        return;
+      }
     }
+
   }
 
 
@@ -149,15 +159,14 @@ function start() {
     return;
   } else if (!running) {
     iteratePositions(stepTime);
-    drawSim();
     //myReq = requestAnimationFrame(draw);
-
     running = true;
   }
 }
 
 function stop() {
-  location.reload();
+  quit = true;
+  running = false;
 }
 
 function save() {
@@ -209,4 +218,35 @@ document.getElementById("btn_start").addEventListener("click", start);
 document.getElementById("btn_stop").addEventListener("click", stop);
 document.getElementById("btn_save").addEventListener("click", save);
 
+/*
+//report the mouse position on click
+canvasSim.addEventListener("click", function (evt) {
+  var mousePos = getMousePos(canvasSim, evt);
+  //console.log(mousePos.x + ',' + mousePos.y);
+}, false);*/
+
+
+// DE-SELECT TARGET POINTS
+// ..by dragging
+var mouseIsDown = false
+canvasSim.addEventListener('mousedown', function () { mouseIsDown = true })
+canvasSim.addEventListener('mouseup', function () { mouseIsDown = false })
+canvasSim.addEventListener("mousemove", function (evt) {
+  if (mouseIsDown) {
+    var mousePos = getMousePos(canvasSim, evt);
+  }
+}, false);
+// ..by clicking
+canvasSim.addEventListener("click", function (evt) {
+  var mousePos = getMousePos(canvasSim, evt);
+  //console.log(mousePos.x + ',' + mousePos.y);
+}, false);
+function getMousePos(canvasSim, evt) {
+  var rect = canvasSim.getBoundingClientRect();
+  var click = {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+  checkMouseOnTarget(click);
+};
 

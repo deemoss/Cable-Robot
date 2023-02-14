@@ -1,4 +1,6 @@
-var ctxBkg = document.getElementById('myBkg').getContext('2d');
+var canvasBkg = document.getElementById('myBkg');
+var ctxBkg = canvasBkg.getContext('2d');
+
 
 var img = new Image();
 img.src = './wall.webp'
@@ -16,5 +18,8 @@ function drawBackground(width, height) {
 img.onload = function () { // Draw image only after it has been loaded 
     ctxBkg.drawImage(img, 0, 0, canvasWidth, canvasHeight);
 };
+
+
+
 
 export { drawBackground };
