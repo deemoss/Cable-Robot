@@ -1,12 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* base styles */
+* {
+    margin: 0;
+    font-family: "Quicksand";
+    color: #333;
+  }
+
 body {
     font-family: Helvetica, Arial, Sans-Serif;
     color: #555555;
   }
 
 #app {
-    position: relative;
-    border: solid 50px lightgrey;
-    padding: 10px 10px 10px 10px;
+    /*position: relative;*/
+    display: flex;
+    flex-direction: column;
     background-color: #a76bbbeb;
 }
 
@@ -15,6 +24,18 @@ body {
    text-align: center;
 
 }
+
+#stack {
+    position:relative;
+    opacity: 0.5;
+    }
+
+#stack canvas {
+    position:absolute;
+    left:0;
+
+    }
+
 
 .button {
     border: none;
@@ -40,12 +61,4 @@ body {
     background-color: #f44336;
 }
 
-#stack {
-    position:relative;
-    }
-#stack canvas {
-    position:absolute;
-    left:0;
-    top: 150px;;
-    }
 

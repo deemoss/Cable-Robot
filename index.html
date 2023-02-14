@@ -9,10 +9,18 @@
 <body>
 
     <div id="app">
-        <h2>Planar Cable Robot Simulator v0.94</h2>
+        <h2>Planar Cable Robot Simulator v0.95</h2>
         <p>Enter the width and the height of the wall to be scanned and "Set Dimensions" before running. Black square
             indicates motion, white square indicates scanning.</p>
 
+        
+        <div id="stack">
+
+            <canvas id="myBkg" width="100" height="100"></canvas>
+            <canvas id="myTgt" width="100" height="100"></canvas>
+            <canvas id="mySim" width="100" height="100"></canvas>
+
+        </div>
         <div id="control">
             <label for="widthID">Width:</label>
             <input type="text" name="width" id="widthID" value="" />
@@ -27,24 +35,14 @@
             <button class="button btn_start" id="btn_start">Start</button>
             <button class="button btn_stop" id="btn_stop">Stop</button>
         </div>
-        <div id="stack">
-
-            <canvas id="myBkg" width="100" height="100"></canvas>
-            <canvas id="myTgt" width="100" height="100"></canvas>
-            <canvas id="mySim" width="100" height="100"></canvas>
-
+        <div id="image-upload">
+            <input type="file" id="myImage" accept="image/png, image/jpg">
+            <div id="display_image"></div>
+        </div>
+        <div>
+            <script type="module" src="./app.js"></script>
+            <script type="module" src="./pointer/pointer.js"></script>
         </div>
     </div>
-    <div>
-        <input type="file" id="myImage" accept="image/png, image/jpg">
-        <div id="display_image"></div>
-    </div>
-    <div>
-        <script type="module" src="./app.js"></script>
-        <script type="module" src="./pointer/pointer.js"></script>
-
-    </div>
-
 </body>
-
 </html>

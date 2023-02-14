@@ -47,7 +47,7 @@ function setupCanvases() {
 
 setupCanvases();
 window.onload = drawBackground(canvasWidth, canvasHeight);
-drawTargets(30);
+drawTargets(100);
 
 var L = { x: 0, y: 0 };           // Left origin top left
 var R = { x: canvasWidth, y: 0 }; // Right origin top right
