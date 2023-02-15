@@ -47,7 +47,7 @@ function setupCanvases() {
 
 setupCanvases();
 window.onload = drawBackground(canvasWidth, canvasHeight);
-drawTargets(100);
+drawTargets(20);
 
 var L = { x: 0, y: 0 };           // Left origin top left
 var R = { x: canvasWidth, y: 0 }; // Right origin top right
@@ -262,12 +262,7 @@ document.getElementById("myFileInput").addEventListener("change", function () {
   });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const recentImageDataUrl = localStorage.getItem("recent-image");
-  if (recentImageDataUrl) {
-    document.getElementById("imgPreview").setAttribute("src", recentImageDataUrl);
-  }
-})
+
 
 
 
