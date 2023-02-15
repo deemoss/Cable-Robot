@@ -228,9 +228,27 @@ document.getElementById("btn_stop").addEventListener("click", stop);
 document.getElementById("btn_save").addEventListener("click", save);
 
 //document.getElementById("curSize").addEventListener("input", resizeCursor);
-document.getElementById("curSize").addEventListener("input", function(){
+document.getElementById("curSize").addEventListener("input", function () {
   resizeCursor(this.value);
 });
+
+// Upload file (image) // https://www.youtube.com/watch?v=8K2ihr3NC40&ab_channel=dcode
+document.getElementById("myFileInput").addEventListener("change", function () {
+  const reader = new FileReader();
+  reader.readAsDataURL(this.files[0]);
+  reader.addEventListener("load", () => {
+    localStorage.setItem("recent-image", reader.result);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", ()=> {
+  const recentImageDataUrl = localStorage.getItem("recent-image");
+  if (recentImageDataUrl){
+    document.getElementById("imgPreview").setAttribute("src", recentImageDataUrl);
+  }
+})
+
+
 
 
 // DE-SELECT TARGET POINTS
