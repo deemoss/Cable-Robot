@@ -11,7 +11,7 @@ var ctxSim = canvasSim.getContext('2d');
 var myReq;
 drawTargets
 var stepTime = 1000;
-window.step = 50;
+window.step = 0;
 
 var moveToSCanRatio = 0.5;
 var running = false;
@@ -33,7 +33,7 @@ function getCookie(name) {
 
 function setupCanvases() {
   //canvasWidth = getCookie('canvasWidth') == null ? 800 : getCookie('canvasWidth');
-  //canvasHeight = getCookie('canvasHeight') == null ? 600 : getCookie('canvasHeight');
+  step = getCookie("stepSize") == null ? 50 : getCookie("stepSize");
   document.getElementById("myBkg").width = canvasWidth;
   document.getElementById("myBkg").height = canvasHeight;
   document.getElementById("myTgt").width = canvasWidth;
@@ -43,6 +43,7 @@ function setupCanvases() {
   document.getElementById("app").style.width = canvasWidth + 'px';
   document.getElementById("widthID").value = canvasWidth;
   document.getElementById("heightID").value = canvasHeight;
+  document.getElementById("stepID").value = step;
 }
 
 
@@ -180,25 +181,9 @@ function save() {
     return;
   }
   // save values
-  canvasWidth = document.getElementById("widthID").value;
-  canvasHeight = document.getElementById("heightID").value;
+  step = document.getElementById("stepID").value;
   // Write cookies
-  document.cookie = "canvasWidth=" + canvasWidth;
-  document.cookie = "canvasHeight=" + canvasHeight;
-
-  // set canvas size
-  document.getElementById("myBkg").width = canvasWidth;
-  document.getElementById("myBkg").height = canvasHeight;
-  document.getElementById("mySim").width = canvasWidth;
-  document.getElementById("mySim").height = canvasHeight;
-
-  // update backround picture
-  drawBackground(canvasWidth, canvasHeight);
-
-  //console.log(canvasHeight);
-
-  // Update Right origin X value
-  R.x = canvasWidth;
+  document.cookie = "stepSize=" + step;
   location.reload();
 }
 
@@ -207,22 +192,10 @@ function resizeCursor(size) {
   initialisePointer();
 }
 
-// Get width
-var widthInput = document.getElementById("widthID");
-widthInput.addEventListener("keypress", function (event) {  // Execute a function when the user presses a key on the keyboard
-  if (event.key === "Enter") {    // If the user presses the "Enter" key on the keyboard
-    event.preventDefault();       // Cancel the default action, if needed
-    document.getElementById("btn_save").click();  // Trigger the button element with a click
-  }
-});
 
-// Get height
-var hightInput = document.getElementById("heightID");
-heightID.addEventListener("keypress", function (event) {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    document.getElementById("btn_save").click();
-  }
+//document.getElementById("curSize").addEventListener("input", resizeCursor);
+document.getElementById("curSize").addEventListener("input", function () {
+  resizeCursor(this.value);
 });
 
 document.getElementById("btn_start").addEventListener("click", start);
@@ -237,10 +210,7 @@ function resizeCanvas() {
   location.reload();
 }
 
-//document.getElementById("curSize").addEventListener("input", resizeCursor);
-document.getElementById("curSize").addEventListener("input", function () {
-  resizeCursor(this.value);
-});
+
 
 
 
