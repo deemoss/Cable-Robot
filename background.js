@@ -3,39 +3,35 @@ var ctxBkg = canvasBkg.getContext('2d');
 
 var img = new Image();
 
-var canvasWidth;
-var canvasHeight;
+//var canvasWidth;
+//var canvasHeight;
+
+img.onload = () => {
+    console.log('Image loaded!');
+    drawBackground();
+    img.onload = null; // stops infinite loop (.src invokes onload)
+};
 
 function drawBackground() {
     const recentImageDataUrl = localStorage.getItem("recent-image");
 
     if (!recentImageDataUrl) {
-        console.log('recentImageDataUrl: ' + recentImageDataUrl + ' Sample image used.')
-        img.src = './sample-wall.jpeg'
+        console.log('NO image.')
+        img.src = './sample-wall.jpeg';
     } else {
+        console.log('Shows image')
         img.src = recentImageDataUrl;
     }
-    canvasWidth = img.naturalWidth;
-    canvasHeight = img.naturalHeight;
+
+    // Calculate canvas height based on window width and image aspect ratio
+    //canvasHeight = window.innerWidth;
+    canvasHeight = canvasWidth * img.naturalHeight / img.naturalWidth;
+
     console.log('naturalWidth: ' + img.naturalWidth + ' naturalHeight: ' + img.naturalHeight)
+
     ctxBkg.clearRect(0, 0, canvasWidth, canvasHeight);
     ctxBkg.drawImage(img, 0, 0, canvasWidth, canvasHeight);
 }
-
-/*
-img.onload = function () { // Draw image only after it has been loaded 
-    ctxBkg.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-};*/
-
-/*
-document.addEventListener("DOMContentLoaded", () => {
-    const recentImageDataUrl = localStorage.getItem("recent-image");
-    if (recentImageDataUrl) {
-        document.getElementById("imgPreview").setAttribute("src", recentImageDataUrl);
-    }
-})*/
-
-
 
 export { drawBackground };
 

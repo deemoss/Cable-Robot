@@ -9,12 +9,15 @@ var ctxSim = canvasSim.getContext('2d');
 
 
 var myReq;
+drawTargets
 var stepTime = 1000;
+window.step = 50;
+
 var moveToSCanRatio = 0.5;
 var running = false;
 var quit = false;
-window.canvasWidth = 0;  // Canvas read stored dimentions, window makes it global
-window.canvasHeight = 0; // Canvas read stored dimentions
+window.canvasWidth = window.innerWidth;
+window.canvasHeight = window.innerHeight;
 
 // Read coockies
 function getCookie(name) {
@@ -29,9 +32,8 @@ function getCookie(name) {
 }
 
 function setupCanvases() {
-  canvasWidth = getCookie('canvasWidth') == null ? 800 : getCookie('canvasWidth');
-  canvasHeight = getCookie('canvasHeight') == null ? 600 : getCookie('canvasHeight');
-
+  //canvasWidth = getCookie('canvasWidth') == null ? 800 : getCookie('canvasWidth');
+  //canvasHeight = getCookie('canvasHeight') == null ? 600 : getCookie('canvasHeight');
   document.getElementById("myBkg").width = canvasWidth;
   document.getElementById("myBkg").height = canvasHeight;
   document.getElementById("myTgt").width = canvasWidth;
@@ -45,9 +47,9 @@ function setupCanvases() {
 
 
 
+window.onload = drawBackground();
 setupCanvases();
-window.onload = drawBackground(canvasWidth, canvasHeight);
-drawTargets(20);
+drawTargets();
 
 var L = { x: 0, y: 0 };           // Left origin top left
 var R = { x: canvasWidth, y: 0 }; // Right origin top right
@@ -227,6 +229,14 @@ document.getElementById("btn_start").addEventListener("click", start);
 document.getElementById("btn_stop").addEventListener("click", stop);
 document.getElementById("btn_save").addEventListener("click", save);
 
+window.addEventListener('resize', resizeCanvas);
+
+function resizeCanvas() {
+  window.canvasWidth = window.innerWidth;
+  window.canvasHeight = window.innerHeight;
+  location.reload();
+}
+
 //document.getElementById("curSize").addEventListener("input", resizeCursor);
 document.getElementById("curSize").addEventListener("input", function () {
   resizeCursor(this.value);
@@ -248,6 +258,8 @@ document.getElementById("myFileInput").addEventListener("change", function () {
       localStorage.setItem("recent-image", reader.result);
       drawBackground();
       location.reload();
+      //setupCanvases();
+      //drawTargets(20);
     } catch (e) {
       if (e.code === DOMException.QUOTA_EXCEEDED_ERR) {
         // Handle the quota exceeded error
