@@ -73,7 +73,4 @@ const init_pointer = (options) => {
     }
     requestAnimationFrame(render)
 }
-
-
-
 export { init_pointer };

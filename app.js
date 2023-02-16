@@ -1,5 +1,5 @@
 import { drawBackground } from './background.js';
-import { drawTargets, checkMouseOnTarget, initialisePointer, setSelectionExp, targetArray } from './targets.js';
+import { drawTargets, drawGoa, checkMouseOnTarget, initialisePointer, setSelectionExp, targetArray } from './targets.js';
 
 
 
@@ -50,6 +50,7 @@ function setupCanvases() {
 
 window.onload = drawBackground();
 setupCanvases();
+drawGoa();
 drawTargets();
 
 var L = { x: 0, y: 0 };           // Left origin top left
