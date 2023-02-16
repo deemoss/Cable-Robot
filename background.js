@@ -34,8 +34,3 @@ function drawBackground() {
 }
 
 export { drawBackground };
-
-
-// image width is set to natural image size. canvase sizing needs reworking.
-// needs refreshing to display uploaded image
-// calculate pixels to mm
