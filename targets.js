@@ -108,6 +108,3 @@ function updateTargets() {
 
 export { drawTargets, checkMouseOnTarget, initialisePointer, setSelectionExp, targetArray };
 
-// UI to set no go areas
-// UI to select step size
-// UI to unselect makeTargetsArray
