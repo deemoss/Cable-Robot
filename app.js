@@ -238,15 +238,16 @@ document.getElementById("curSize").addEventListener("input", function () {
 
 // Upload file (image) // https://www.youtube.com/watch?v=8K2ihr3NC40&ab_channel=dcode
 document.getElementById("myFileInput").addEventListener("change", function () {
+
   const reader = new FileReader();
   reader.readAsDataURL(this.files[0]);
+
   reader.addEventListener("load", () => {
-
-
-
     try {
       // Attempt to store the file in localStorage
       localStorage.setItem("recent-image", reader.result);
+      drawBackground();
+      location.reload();
     } catch (e) {
       if (e.code === DOMException.QUOTA_EXCEEDED_ERR) {
         // Handle the quota exceeded error
@@ -258,7 +259,6 @@ document.getElementById("myFileInput").addEventListener("change", function () {
         console.log('An error occurred while trying to store the file in localStorage.');
       }
     }
-
   });
 });
 
