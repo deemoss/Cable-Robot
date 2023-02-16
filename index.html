@@ -2,32 +2,50 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="sim.css">
+    <link rel="stylesheet" href="app.css">
+    <link href="./pointer/pointer.css" rel="stylesheet">
 </head>
 
 <body>
-    <div id="canv">
-        <h2>Planar Cable Robot Simulator v0.92</h2>
-    <p>Enter the width and the height of the wall to be scanned and "Set Dimensions" before running. Black square indicates motion, white square indicates scanning.</p>
-        <canvas width="100" height="100" id="myCanvas"></canvas>
+
+    <div id="app">
+        <h2>Planar Cable Robot Simulator v0.95</h2>
+        <p>Enter the width and the height of the wall to be scanned and "Set Dimensions" before running. Black square
+            indicates motion, white square indicates scanning.</p>
+
+        
+        <div id="stack">
+
+            <canvas id="myBkg" width="100" height="100"></canvas>
+            <canvas id="myTgt" width="100" height="100"></canvas>
+            <canvas id="mySim" width="100" height="100"></canvas>
+
+        </div>
         <div id="control">
-            <label for="width">Width:</label>
+            <label for="widthID">Width:</label>
             <input type="text" name="width" id="widthID" value="" />
 
-            <label for="height">Height:</label>
+            <label for="heightID">Height:</label>
             <input type="text" name="height" id="heightID" value="" />
 
-            <button class="button btn_save" id="btn_save" onclick="save()">Set Dimentions</button>
-        
+            <label for="stepID">Step (mm):</label>
+            <input type="text" name="step" id="stepID" value="" />
+
+            <label for="curSize">Cursor size:</label>
+            <input type="range" id="curSize" name="curSize" min="1" max="10">
+
+            <button class="button btn_save" id="btn_save">Save step size</button>
+            <button class="button btn_start" id="btn_start">Start</button>
+            <button class="button btn_stop" id="btn_stop">Stop</button>
         </div>
-        <div id="control">
-           
-            <button class="button btn_start" onclick="start()">Start</button>
-            <button class="button btn_stop" onclick="stop()">Stop</button>
+        <div id="image-upload">
+            <input type="file" id="myFileInput" accept="image/png, image/jpg">
+            <!-- <img id="imgPreview" src="" alt="Preview">-->
         </div>
-    </div>
-    <div>
-        <script src="sim.js"></script>
+        <div>
+            <script type="module" src="./app.js"></script>
+            <script type="module" src="./pointer/pointer.js"></script>
+        </div>
     </div>
 </body>
 </html>

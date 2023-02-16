@@ -1,14 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* base styles */
+* {
+    margin: 0;
+    font-family: "Quicksand";
+    color: #333;
+  }
+
 body {
     font-family: Helvetica, Arial, Sans-Serif;
     color: #555555;
   }
 
-#canv {
-    position: relative;
-    border: solid 50px lightgrey;
-    padding: 10px 10px 10px 10px;
-    background-color: lightgray;
-
+#app {
+    /*position: relative;*/
+    display: flex;
+    flex-direction: column;
+    background-color: #a76bbbeb;
 }
 
 #control {
@@ -16,6 +24,19 @@ body {
    text-align: center;
 
 }
+
+#stack {
+    position:relative;
+    opacity: 1;
+    }
+
+#stack canvas {
+    position:absolute;
+    top: 150px;
+    left:0;
+
+    }
+
 
 .button {
     border: none;
@@ -40,4 +61,5 @@ body {
 .btn_stop {
     background-color: #f44336;
 }
+
 
