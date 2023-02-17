@@ -202,7 +202,20 @@ document.getElementById("curSize").addEventListener("input", function () {
 document.getElementById("btn_start").addEventListener("click", start);
 document.getElementById("btn_stop").addEventListener("click", stop);
 document.getElementById("btn_save").addEventListener("click", save);
+document.getElementById("btn_hideBackground").addEventListener("click", toggleVisibility);
 
+
+function toggleVisibility() {
+  var canvas = document.getElementById("myBkg");
+  var button = document.getElementById("btn_hideBackground");
+  if (canvas.style.visibility === "hidden") {
+    canvas.style.visibility = "visible";
+    button.innerHTML = "Hide Background";
+  } else {
+    canvas.style.visibility = "hidden";
+    button.innerHTML = "Show Background";
+  }
+}
 
 // Get the input field
 var input = document.getElementById("stepID");
